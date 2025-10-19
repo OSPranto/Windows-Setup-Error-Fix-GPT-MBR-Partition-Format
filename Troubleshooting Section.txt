@@ -1,0 +1,113 @@
+## ⚠️ Windows Setup দিতে গিয়ে যেসব সমস্যায় পড়া যায়
+
+### 🧩 1. Partition Style Mismatch (সবচেয়ে Common)
+
+**Error:**
+
+> “Windows cannot be installed to this disk. The selected disk has an MBR (or GPT) partition style.”
+
+**কারণ:**
+USB bootable drive আর hard disk এর partition style আলাদা।
+যেমন:
+
+* USB = GPT (UEFI)
+* HDD = MBR (Legacy)
+
+**সমাধান:**
+BIOS mode change করো (UEFI ↔ Legacy), অথবা USB format match করে বানাও।
+
+---
+
+### ⚙️ 2. BIOS Boot Mode ভুল সেট থাকা
+
+**Error/Issue:**
+USB detect হচ্ছে না, বা “No bootable device found” দেখাচ্ছে।
+
+**কারণ:**
+BIOS-এ Boot Mode সঠিকভাবে সেট না থাকলে (UEFI vs Legacy) USB থেকে boot নেয় না।
+
+**সমাধান:**
+BIOS-এ গিয়ে Boot Mode → USB boot priority → ঠিক করে দাও।
+
+---
+
+### 💽 3. Secure Boot বা Fast Boot Enable থাকা
+
+**Error:**
+Windows ISO থেকে boot নেয় না, বা screen black পড়ে থাকে।
+
+**কারণ:**
+Secure Boot বা Fast Boot অনেক সময় non-official ISO বা custom bootable drive ব্লক করে দেয়।
+
+**সমাধান:**
+BIOS-এ গিয়ে temporarily **Secure Boot disable** করে দাও।
+Install শেষ হলে আবার Enable করে নিতে পারো।
+
+---
+
+### 🔌 4. USB bootable corrupt বা wrong ISO
+
+**Error:**
+
+> “Windows cannot find the required installation files.”
+> অথবা install মাঝপথে থেমে যায়।
+
+**কারণ:**
+ISO ফাইল corrupt বা ভুলভাবে burn করা হয়েছে।
+
+**সমাধান:**
+নতুন ISO ডাউনলোড করে **Rufus** দিয়ে rebuild করো।
+
+---
+
+### 💾 5. HDD/SSD detect না করা
+
+**Error:**
+
+> “No drives were found. Click Load Driver to provide a mass storage driver.”
+
+**কারণ:**
+Windows setup HDD/SSD এর driver চিনতে পারছে না (বিশেষ করে নতুন NVMe drive গুলোর ক্ষেত্রে)।
+
+**সমাধান:**
+Motherboard বা laptop brand অনুযায়ী storage driver আগে থেকে ডাউনলোড করে USB-তে রাখো,
+setup screen এ “Load Driver” ক্লিক করে সেটা দাও।
+
+---
+
+### 🪛 6. Existing partition delete করা লাগতে পারে
+
+**Error:**
+
+> “Setup was unable to use the existing partition.”
+
+**কারণ:**
+পুরোনো system partition (EFI / Recovery) এর মধ্যে conflict।
+
+**সমাধান:**
+Only system reserved partition delete করে নতুন করে create করো —
+data partition untouched রাখলে format লাগবে না।
+
+---
+
+### 🔋 7. Power loss বা sudden restart
+
+**Problem:**
+Setup এর মাঝে PC বন্ধ হয়ে গেলে bootloader corrupt হয়ে যায়।
+
+**সমাধান:**
+পুনরায় USB দিয়ে boot করে “Repair your computer → Startup Repair” চালাও।
+
+---
+
+## ✅ Summary (সংক্ষেপে)
+
+| সমস্যা                    | সম্ভাব্য কারণ      | সমাধান                         |
+| ------------------------- | ------------------ | ------------------------------ |
+| MBR/GPT Error             | Partition mismatch | BIOS বা USB format match করো   |
+| Bootable USB detect হয় না | Wrong boot mode    | BIOS boot mode ঠিক করো         |
+| Secure Boot block করছে    | Unauthorized ISO   | Secure Boot off করে ইনস্টল দাও |
+| Disk detect হচ্ছে না      | Missing driver     | Storage driver লোড দাও         |
+| Setup মাঝপথে বন্ধ         | Corrupt ISO        | নতুন ISO / USB বানাও           |
+
+---
